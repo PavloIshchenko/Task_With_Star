@@ -1,0 +1,20 @@
+---
+
+
+- name: Install and configure MariaDB
+  hosts: db
+  become: true
+  roles:
+    - db
+    - lukasic.mariadb
+
+
+- name: Install and configure Apache
+  hosts: server
+  become: true
+  roles:
+    - server
+    - geerlingguy.composer
+    - geerlingguy.nodejs
+    - geerlingguy.apache
+    - geerlingguy.php
