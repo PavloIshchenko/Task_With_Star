@@ -1,0 +1,52 @@
+---
+  - name: Run Composer
+    shell: composer install
+    environment:
+        COMPOSER_ALLOW_SUPERUSER: 1
+    args:
+      chdir: /var/www/myapp
+    become: true
+  
+  - name: Copy env template
+    template: src=env.j2 dest=/var/www/myapp/.env
+    become: true
+
+  - name: Copy apache2 template
+    template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/myapp.conf
+    become: true
+
+  - name: Run set aplication key
+    shell: 'php artisan key:generate'
+    args:
+      chdir: /var/www/myapp
+    become: true
+
+  - name: Make database migration
+    shell: php artisan migrate
+    args:
+      chdir: /var/www/myapp
+    become: true
+
+  - name: enable myapp.conf 
+    command: a2ensite myapp.conf
+    args:
+      chdir: /etc/apache2/sites-available/
+    notify: restart apache2  
+    become: true
+    
+  - name: run rewrite rule
+    shell: a2enmod rewrite 
+    args:
+      chdir: /var/www/myapp
+    notify:
+    - restart apache2
+    become: true
+
+  - name: Change ownership of a doc root /var/www/myapp
+    ansible.builtin.file:
+      path: /var/www/myapp
+      state: directory
+      recurse: yes
+      owner: www-data
+      group: www-data
+    become: true

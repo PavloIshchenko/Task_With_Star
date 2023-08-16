@@ -1,0 +1,11 @@
+---
+# tasks file for db
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: true
+
+- name: install DB
+  include_role:
+    name: lukasic.mariadb
+

@@ -1,0 +1,12 @@
+---
+  - name: Make npm install
+    shell: npm audit fix install
+    args:
+      chdir: /var/www/myapp
+    become: true
+
+  - name: Make npm run build
+    shell: npm run build
+    args:
+      chdir: /var/www/myapp
+    become: true

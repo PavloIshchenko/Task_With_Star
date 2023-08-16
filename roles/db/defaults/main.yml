@@ -1,0 +1,5 @@
+---
+# defaults file for db
+db_name: mydb
+db_user: dbuser
+db_pass: dbpass

@@ -1,0 +1,6 @@
+---
+
+pymysql_pkg: python3-pymysql
+mariadb_root_passwd: "{{ db_pass }}"
+mariadb_databases: "{{ db_name }}"
+mariadb_users: "{{ db_user }}"

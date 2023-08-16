@@ -1,0 +1,41 @@
+---
+# tasks file for server
+  - name: Apt update
+    apt: update_cache=true cache_valid_time=3600
+    become: true
+
+  - name: install php and dependencies
+    include_role:
+      name: geerlingguy.php
+
+  - name: install apache2
+    include_role:
+      name: geerlingguy.apache
+
+  - name: install geerlingguy.nodejs
+    include_role:
+      name: geerlingguy.nodejs
+
+  - name: install composer using geerlingguy.composer
+    include_role:
+      name: geerlingguy.composer
+
+  - name: Start Apache2 service
+    service:
+      name: apache2
+      state: started
+      enabled: yes 
+    become: true
+
+  - name: Clone git repo
+    ansible.builtin.git:
+      repo: https://github.com/Practical-DevOps/app-for-devops.git
+      dest: /var/www/myapp
+      single_branch: yes
+      version: main
+  
+  - name: Application Setup and Database migration
+    include: app_setup_and_db_migration.yml
+  
+  - name: Build the Application
+    include: build_app.yml
